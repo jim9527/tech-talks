@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AI-Driven E2E Testing with Playwright</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/monokai.css">
+<style>
+  .reveal pre { font-size: 0.55em; }
+  .reveal h2 { color: #42affa; }
+  .reveal h3 { color: #e7ad52; font-size: 0.9em; }
+  .ascii-box { font-family: monospace; font-size: 0.65em; background: #1a1a2e; padding: 20px; border-radius: 8px; text-align: left; display: inline-block; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.75em; }
+  .good { color: #4caf50; }
+  .bad  { color: #f44336; }
+  .warn { color: #ff9800; }
+  table { font-size: 0.65em; border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #555; padding: 6px 10px; }
+  th { background: #333; }
+  .reveal .slides section { overflow-y: auto; max-height: 680px; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- Slide 1: Title -->
+<section>
+  <h1 style="font-size:1.4em">AI-Driven E2E Testing<br>with Playwright</h1>
+  <h3>From Prompt to Production</h3>
+  <p style="font-size:0.7em; color:#aaa">Staff Engineer Workshop &nbsp;|&nbsp; 2026</p>
+  <p style="font-size:0.65em; margin-top:40px; color:#888">
+    Agenda: Why E2E → Pain Points → AI Workflow → Skill Files → Auth → Mocks → Anti-Patterns → Demo
+  </p>
+</section>
+
+<!-- Slide 2: Why E2E -->
+<section>
+  <h2>Why E2E Tests Still Matter</h2>
+  <div class="two-col" style="margin-top:20px">
+    <div>
+      <h3>The Testing Pyramid</h3>
+      <div class="ascii-box">
+<pre>        /\
+       /E2E\       ← business flows
+      /------\
+     / Integ  \    ← service contracts
+    /----------\
+   /    Unit    \  ← logic correctness
+  /______________\</pre>
+      </div>
+    </div>
+    <div style="text-align:left; padding-top:20px">
+      <p>Unit tests verify <em>logic</em></p>
+      <p>Integration tests verify <em>contracts</em></p>
+      <p>E2E tests verify <em>user workflows</em></p>
+      <br>
+      <blockquote style="font-size:0.85em; border-left:3px solid #42affa; padding-left:10px">
+        E2E tests validate <strong>business workflows</strong>,<br>not just code correctness
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 3: Pain Points -->
+<section>
+  <h2>Pain of Traditional E2E</h2>
+  <div class="two-col" style="margin-top:20px">
+    <div style="text-align:left">
+      <p class="bad">✗ Slow to write — massive boilerplate</p>
+      <p class="bad">✗ Fragile selectors — UI change = all fail</p>
+      <p class="bad">✗ Flaky timing — async race conditions</p>
+      <p class="bad">✗ High maintenance cost</p>
+      <p class="bad">✗ Hard to debug failures in CI</p>
+    </div>
+    <div style="text-align:left">
+      <h3>Real cost</h3>
+      <p style="font-size:0.8em">A team of 5 engineers spending 20% of sprint time on flaky tests = <strong>1 full engineer lost</strong></p>
+      <br>
+      <blockquote style="font-size:0.8em; border-left:3px solid #f44336; padding-left:10px">
+        "Writing tests is more painful than writing features"
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 4: What AI Brings -->
+<section>
+  <h2>What AI Brings to E2E</h2>
+  <div class="two-col" style="margin-top:20px">
+    <div style="text-align:left">
+      <h3>Capabilities</h3>
+      <p class="good">✓ Natural language → test code</p>
+      <p class="good">✓ Auto-generate Playwright tests</p>
+      <p class="good">✓ Refactor and fix failing tests</p>
+      <p class="good">✓ Enforce conventions via skill files</p>
+    </div>
+    <div style="text-align:left">
+      <h3>Honest limitations</h3>
+      <p class="warn">⚠ Prompt quality determines test quality</p>
+      <p class="warn">⚠ Happy path bias — misses edge cases</p>
+      <p class="warn">⚠ Can hallucinate selectors</p>
+      <p class="warn">⚠ Cannot reason about visual layout</p>
+    </div>
+  </div>
+  <br>
+  <p style="font-size:0.75em">AI is an <strong>accelerator</strong>, not a replacement for test design thinking</p>
+</section>
+
+<!-- Slide 5: AI Testing Loop -->
+<section>
+  <h2>The AI-Augmented Testing Loop</h2>
+  <div class="ascii-box" style="margin-top:8px; font-size:0.52em">
+<pre>  Product Requirement / Ticket
+            │
+            ▼
+  ┌─────────────────────┐
+  │  Structured Prompt  │  ← Feature, Goal, Steps, Assertions
+  └─────────────────────┘
+            │
+            ▼
+  ┌─────────────────────┐
+  │   AI Agent (LLM)    │  ← reads skill file conventions
+  └─────────────────────┘
+            │
+            ▼
+  ┌─────────────────────┐
+  │  Playwright Test    │  ← standard TypeScript, no black-box DSL
+  └─────────────────────┘
+            │
+            ▼
+  ┌─────────────────────┐
+  │   Human Review      │  ← MANDATORY — AI owns "how", human owns "what"
+  └─────────────────────┘
+            │
+            ▼
+  ┌─────────────────────┐
+  │   CI/CD Pipeline    │  ← blocks bad deploys
+  └─────────────────────┘
+            │
+       pass │ fail
+            ▼
+  ┌─────────────────────┐
+  │  AI Fixes / Iterate │
+  └─────────────────────┘</pre>
+  </div>
+</section>
+
+<!-- Slide 6: Skill Files -->
+<section>
+  <h2>Skill Files: Teaching AI Your Conventions</h2>
+  <div class="two-col" style="margin-top:20px">
+    <div style="text-align:left">
+      <h3>What is a skill file?</h3>
+      <p style="font-size:0.8em">A markdown file at <code>.claude/skills/playwright.md</code> that tells the AI agent:</p>
+      <ul style="font-size:0.75em">
+        <li>Which selectors to use</li>
+        <li>How auth works in this project</li>
+        <li>When to mock vs use real backend</li>
+        <li>Anti-patterns to avoid</li>
+      </ul>
+    </div>
+    <div style="text-align:left">
+      <h3>Why not just prompt?</h3>
+      <ul style="font-size:0.75em">
+        <li>Persists across sessions</li>
+        <li>Shared with the whole team</li>
+        <li>Version-controlled in git</li>
+        <li>Loaded automatically by the agent</li>
+      </ul>
+      <br>
+      <p style="font-size:0.75em" class="good">One skill file = consistent tests from every engineer</p>
+    </div>
+  </div>
+  <div class="ascii-box" style="margin-top:15px; font-size:0.6em">
+<pre>  .claude/
+  └── skills/
+      └── playwright.md   ← manually copied, team-owned convention guide</pre>
+  </div>
+</section>
+
+<!-- Slide 7: Prompt Engineering -->
+<section>
+  <h2>Prompt is the New Test Case</h2>
+  <div class="two-col" style="margin-top:10px">
+    <div>
+      <h3>Structured prompt template</h3>
+      <pre><code class="language-text">Feature: Inventory page
+Test goal: User can add item to cart
+Base URL: https://www.saucedemo.com
+Steps:
+  1. Navigate to /inventory.html
+  2. Click "Add to cart" on Backpack
+  3. Check cart badge shows "1"
+Assertions:
+  - Cart badge text equals "1"
+Edge cases:
+  - Adding same item twice</code></pre>
+    </div>
+    <div>
+      <h3>AI generates</h3>
+      <pre><code class="language-typescript">test('add item to cart', async ({ page }) => {
+  await page.goto('/inventory.html');
+  await page.locator(
+    '[data-test="add-to-cart-sauce-labs-backpack"]'
+  ).click();
+
+  await expect(
+    page.locator('.shopping_cart_badge')
+  ).toHaveText('1');
+});</code></pre>
+    </div>
+  </div>
+  <p style="font-size:0.7em; margin-top:10px">High-quality prompt = high-quality test. Garbage in, garbage out.</p>
+</section>
+
+<!-- Slide 8: Selector Strategy -->
+<section>
+  <h2>Selector Strategy Hierarchy</h2>
+  <div class="ascii-box" style="margin-top:20px">
+<pre>  Priority 1 (BEST)   getByTestId('login-button')
+                           │  stable, decoupled from UI
+                           │
+  Priority 2          getByRole('button', { name: 'Login' })
+                           │  semantic, accessible
+                           │
+  Priority 3          getByLabel('Email address')
+                           │  for form fields
+                           │
+  Priority 4 (LAST)   locator('.btn-primary')
+                           │  brittle — breaks on CSS refactor
+                           │
+  NEVER               locator('//div/button[1]')
+                           XPath — unmaintainable</pre>
+  </div>
+  <p style="font-size:0.7em; margin-top:20px">
+    Add <code>data-testid</code> attributes to your components. This is a <strong>frontend contract</strong> with your tests.
+  </p>
+</section>
+
+<!-- Slide 9: storageState Pattern -->
+<section>
+  <h2>Auth at Scale: storageState Pattern</h2>
+  <div class="ascii-box" style="margin-top:10px">
+<pre>  WITHOUT storageState (naive)          WITH storageState (correct)
+
+  test 1: login → do thing              globalSetup runs ONCE:
+  test 2: login → do thing                login → save auth/user.json
+  test 3: login → do thing                        │
+  test 4: login → do thing              ┌─────────┴──────────┐
+  test 5: login → do thing              │  playwright.config  │
+                                        │  storageState:      │
+  5 logins × N tests = slow,            │  'auth/user.json'   │
+  flaky, brittle                        └─────────┬──────────┘
+                                                  │ inherited by ALL tests
+                                        test 1: already logged in ✓
+                                        test 2: already logged in ✓
+                                        test 3: already logged in ✓</pre>
+  </div>
+  <p style="font-size:0.7em; margin-top:10px">
+    <span class="warn">Exception:</span> <code>login.spec.ts</code> opts out with <code>test.use({ storageState: { cookies: [], origins: [] } })</code>
+  </p>
+</section>
+
+<!-- Slide 10: storageState Code -->
+<section>
+  <h2>Code: storageState in Practice</h2>
+  <div class="two-col">
+    <div>
+      <h3>auth/setup.ts</h3>
+      <pre><code class="language-typescript">import { chromium } from '@playwright/test';
+
+async function globalSetup() {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+
+  await page.goto('https://www.saucedemo.com/');
+  await page.getByTestId('username')
+    .fill('standard_user');
+  await page.getByTestId('password')
+    .fill('secret_sauce');
+  await page.getByTestId('login-button').click();
+
+  await page.waitForURL(/inventory/);
+  await page.context().storageState({
+    path: 'auth/user.json'  // gitignored
+  });
+  await browser.close();
+}
+export default globalSetup;</code></pre>
+    </div>
+    <div>
+      <h3>playwright.config.ts</h3>
+      <pre><code class="language-typescript">export default defineConfig({
+  globalSetup: './auth/setup.ts',
+  use: {
+    baseURL: 'https://www.saucedemo.com',
+    storageState: 'auth/user.json',
+  },
+  projects: [
+    {
+      name: 'setup',
+      testMatch: /auth\/setup\.ts/,
+    },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
+    },
+  ],
+});</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 11: Mock Strategy -->
+<section>
+  <h2>Mock Strategy: When to Mock, When Not To</h2>
+  <table style="margin-top:8px">
+    <tr><th></th><th>Use page.route() Mocks</th><th>Use Real Backend</th></tr>
+    <tr><td>CI stability</td><td class="good">Backend flaky / unavailable</td><td class="warn">Backend is stable</td></tr>
+    <tr><td>Data states</td><td class="good">Need empty cart, out-of-stock</td><td class="warn">Need real data</td></tr>
+    <tr><td>Speed</td><td class="good">Eliminate network latency</td><td class="warn">Latency acceptable</td></tr>
+    <tr><td>Integration</td><td class="bad">Don't mock API contracts</td><td class="good">Testing real contracts</td></tr>
+    <tr><td>Pre-release</td><td class="bad">Don't mock smoke tests</td><td class="good">Staging smoke tests</td></tr>
+  </table>
+  <pre style="margin-top:8px"><code class="language-typescript">/*
+ * USE MOCKS WHEN: (a) backend unstable in CI
+ *   (b) need specific data states  (c) speed matters
+ * USE REAL BACKEND WHEN: (a) testing API contracts
+ *   (b) pre-release smoke tests  (c) data correctness
+ */
+await page.route('**/api/v1/inventory', route =>
+  route.fulfill({ json: mockInventory })
+);</code></pre>
+</section>
+
+<!-- Slide 12: Engineered Test Structure -->
+<section>
+  <h2>Engineered Test Structure</h2>
+  <pre><code class="language-typescript">import { test, expect } from '@playwright/test';
+
+// login.spec.ts — opts out of global storageState
+test.use({ storageState: { cookies: [], origins: [] } });
+
+test.describe('Login Flow', () => {
+  test('user can login and see inventory', async ({ page }) => {
+    await page.goto('https://www.saucedemo.com/');
+
+    await page.getByTestId('username').fill('standard_user');
+    await page.getByTestId('password').fill('secret_sauce');
+    await page.getByTestId('login-button').click();
+
+    await expect(page).toHaveURL(/inventory/);
+    await expect(page.locator('.inventory_item')).toBeVisible();
+  });
+
+  test('locked_out_user sees error', async ({ page }) => {
+    await page.goto('/');
+    await page.getByTestId('username').fill('locked_out_user');
+    await page.getByTestId('password').fill('secret_sauce');
+    await page.getByTestId('login-button').click();
+
+    await expect(page.getByTestId('error-button')).toBeVisible();
+  });
+});</code></pre>
+</section>
+
+<!-- Slide 13: Anti-Patterns -->
+<section>
+  <h2>Anti-Patterns That Kill Test Suites</h2>
+  <div class="two-col" style="margin-top:10px">
+    <div style="text-align:left">
+      <h3>Never do this</h3>
+      <pre><code class="language-typescript">// FLAKY — arbitrary wait
+await page.waitForTimeout(2000);
+
+// BRITTLE — breaks on CSS refactor
+await page.$('.btn-primary');
+
+// BLOCKS CI — never commit
+test.only('my test', ...);
+
+// SHARED STATE — tests interfere
+let cart = [];
+test('adds item', () => cart.push(1));
+test('checks cart', () => expect(cart));</code></pre>
+    </div>
+    <div style="text-align:left">
+      <h3>Do this instead</h3>
+      <pre><code class="language-typescript">// Auto-wait on element
+await expect(locator).toBeVisible();
+
+// Stable test-id selector
+await page.getByTestId('submit-btn');
+
+// Tag for selective runs
+test('my test', { tag: '@smoke' }, ...);
+
+// Independent state per test
+test.beforeEach(async ({ page }) => {
+  await page.goto('/cart');
+  // fresh state every time
+});</code></pre>
+    </div>
+  </div>
+  <blockquote style="font-size:0.75em; border-left:3px solid #f44336; padding-left:10px; margin-top:10px">
+    If you can't read your test, you don't own your test
+  </blockquote>
+</section>
+
+<!-- Slide 14: Scaling Patterns -->
+<section>
+  <h2>Scaling Patterns (Staff Level)</h2>
+  <div class="two-col" style="margin-top:10px">
+    <div style="text-align:left">
+      <h3>1. Page Object Model</h3>
+      <pre><code class="language-typescript">class LoginPage {
+  constructor(private page: Page) {}
+
+  async login(user: string, pass: string) {
+    await this.page.getByTestId('username')
+      .fill(user);
+    await this.page.getByTestId('password')
+      .fill(pass);
+    await this.page.getByTestId('login-button')
+      .click();
+  }
+}</code></pre>
+      <h3 style="margin-top:10px">2. Test Layering</h3>
+      <p style="font-size:0.75em">Smoke (5 tests, 2 min) → Regression (50 tests, 15 min) → Full (200 tests, 1 hr)</p>
+    </div>
+    <div style="text-align:left">
+      <h3>3. Parallelization</h3>
+      <pre><code class="language-typescript">// playwright.config.ts
+projects: [
+  { name: 'chrome' },
+  { name: 'firefox' },
+  { name: 'mobile-safari' },
+]
+// --shard=1/4 in CI</code></pre>
+      <h3 style="margin-top:10px">4. Test Data Strategy</h3>
+      <ul style="font-size:0.75em">
+        <li>Fixtures for stable reference data</li>
+        <li>Factories for dynamic test data</li>
+        <li>Teardown to avoid state leakage</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 15: AI Limitations -->
+<section>
+  <h2>AI Limitations You Must Know</h2>
+  <div class="two-col" style="margin-top:20px">
+    <div style="text-align:left">
+      <p class="warn">⚠ <strong>Hallucinated selectors</strong><br>
+        <span style="font-size:0.8em">AI invents <code>data-testid</code> values that don't exist. Always verify against the DOM.</span>
+      </p>
+      <br>
+      <p class="warn">⚠ <strong>Happy path bias</strong><br>
+        <span style="font-size:0.8em">AI writes the success case. You must prompt explicitly for error states, edge cases, and race conditions.</span>
+      </p>
+    </div>
+    <div style="text-align:left">
+      <p class="warn">⚠ <strong>Stale context</strong><br>
+        <span style="font-size:0.8em">AI doesn't know your app changed. Skill files help, but human review is non-negotiable.</span>
+      </p>
+      <br>
+      <p class="warn">⚠ <strong>No visual reasoning</strong><br>
+        <span style="font-size:0.8em">AI can't see the page. It can't detect layout regressions, z-index issues, or overlapping elements.</span>
+      </p>
+    </div>
+  </div>
+  <br>
+  <blockquote style="font-size:0.75em; border-left:3px solid #ff9800; padding-left:10px">
+    AI owns the "how". You own the "what" and the "whether it's correct".
+  </blockquote>
+</section>
+
+<!-- Slide 16: Live Demo -->
+<section>
+  <h2>Live Demo</h2>
+  <div class="ascii-box" style="margin-top:20px">
+<pre>  Demo flow:
+
+  1. Show .claude/skills/playwright.md
+     └── "This is what the AI reads before writing any test"
+
+  2. Ask AI to write a new test from a prompt
+     └── "Test that a user can sort inventory by price"
+
+  3. Review the generated test together
+     └── Check selectors, assertions, structure
+
+  4. Run the tests
+     $ cd e2e-demo
+     $ npx playwright test --ui
+
+  5. Show storageState in action
+     └── Open auth/user.json — see saved cookies
+
+  6. Show a mock intercept
+     └── inventory.spec.ts — page.route() pattern</pre>
+  </div>
+  <p style="font-size:0.7em; margin-top:15px">Target site: <strong>https://www.saucedemo.com</strong> — public demo, no account needed</p>
+</section>
+
+<!-- Slide 17: Takeaways -->
+<section>
+  <h2>Key Takeaways</h2>
+  <div style="text-align:left; max-width:700px; margin:10px auto 0">
+    <p class="good">1. Write a skill file — teach AI your project's conventions once</p>
+    <p class="good">2. Add <code>data-testid</code> to your components — it's a contract with your tests</p>
+    <p class="good">3. Adopt storageState — login once, run fast</p>
+    <p class="good">4. Define your mock policy — document when to mock in every <code>page.route()</code></p>
+    <p class="good">5. Human review is non-negotiable — AI accelerates, humans own quality</p>
+  </div>
+  <br>
+  <div class="ascii-box" style="font-size:0.6em; margin-top:10px">
+<pre>  AI = accelerator
+  Prompt = new abstraction layer
+  Playwright = execution engine (unchanged)
+  Human = test strategy owner</pre>
+  </div>
+  <p style="font-size:0.65em; margin-top:20px; color:#888">
+    Workshop repo: <code>ai-driven-e2e/e2e-demo/</code> &nbsp;|&nbsp;
+    Skill file: <code>.claude/skills/playwright.md</code>
+  </p>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    plugins: [ RevealHighlight ]
+  });
+</script>
+</body>
+</html>
