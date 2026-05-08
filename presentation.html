@@ -650,7 +650,7 @@ Test details:
      - "Name of Scholarship *" → test scholarship
      - "Sponsor (Awarding Institution)" → alda
      - "Notes" rich text area (div nth(2)) → test scholarship xxxx
-     - "Award Amount *"  → 1000
+     - "Award Amount *" ('input[name="award"]')  → 1000
   5. Fill in eligibility fields:
      - Check the first "Yes" radio
      - Select grade level: 12th grade
@@ -673,7 +673,6 @@ Test details:
 
 IMPORTANT:
 - Use the Playwright MCP to generate the test code.
-- Add a comment only for the #mui-52 locator explaining no label/role is available for the amount field.
 - Ensure browser is closed after test completion.
 - Include timeouts where appropriate (use toBeVisible() assertions as implicit waits).
 
@@ -811,7 +810,7 @@ Save to:
 
   await page.getByRole('textbox', { name: 'Name of Scholarship *' })
     .fill('Test Scholarship');
-  await page.locator('#mui-9').fill('5000');
+  await page.locator('input[name="award"]').fill('5000');
   await page.getByRole('group', { name: 'Application Due Date' })
     .getByLabel('Application Due Date *')
     .fill('12/31/2026');
@@ -852,7 +851,7 @@ Save to:
     </tr>
     <tr>
       <td>4</td>
-      <td><code>locator('#mui-9')</code></td>
+      <td><code>locator('#header-1')</code></td>
       <td>Works tactically, but brittle when IDs are generated or design-system driven.</td>
     </tr>
     <tr>
