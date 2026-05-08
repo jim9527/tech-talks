@@ -553,7 +553,31 @@
 </section>
 
 <section>
-  <div class="eyebrow">5. Benefits and Limitations</div>
+  <div class="eyebrow">5. The Process Problem</div>
+  <h2>The Problem Isn't Intelligence. It's Process.</h2>
+  <div class="grid-2" style="margin-top:22px">
+    <div class="compare-card bad">
+      <h3>Junior Developer (and Claude Code by Default)</h3>
+      <p>Read the ticket, open the file, start typing. Fast. Also the one who forgets to check if the method they're calling actually exists, or whether the database column they're referencing was renamed three weeks ago.</p>
+      <p style="margin-top:12px"><em>(It was renamed three weeks ago. It's always three weeks ago.)</em></p>
+    </div>
+    <div class="compare-card good">
+      <h3>Senior Developer</h3>
+      <p>Read the ticket, read the code around it, read the tests, check the git history, <em>then</em> start typing. Slower to start but faster to finish — because they don't have to go back and fix what they broke.</p>
+    </div>
+  </div>
+  <div class="quote-card" style="margin-top:22px">
+    <p>
+      Claude Code defaults to junior mode. Not because it lacks knowledge, but because it <strong>lacks process</strong>.
+      It has no internal checklist telling it to verify assumptions, write tests first, or think about what happens
+      when two requests hit the same endpoint at the same time.
+      It's enthusiastic. It ships. And enthusiasm, it turns out, does not catch nullable datetime crashes.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">6. Benefits and Limitations</div>
   <h2>Benefits and Limitations of AI-Driven E2E Testing</h2>
   <div class="grid-2" style="margin-top:22px">
     <div class="compare-card good">
@@ -583,7 +607,7 @@
 </section>
 
 <section>
-  <div class="eyebrow">6. Workflow</div>
+  <div class="eyebrow">7. Workflow</div>
   <h2>AI-Assisted E2E Workflow</h2>
   <div class="process">
     <div class="step-card">
@@ -623,7 +647,7 @@
 </section>
 
 <section>
-  <div class="eyebrow">7. Prompt Quality</div>
+  <div class="eyebrow">8. Prompt Quality</div>
   <h2>Prompt Quality Becomes Test Quality</h2>
   <div class="grid-2" style="margin-top:18px">
     <div class="code-card">
@@ -696,7 +720,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">8. Prompt Examples</div>
+  <div class="eyebrow">9. Prompt Examples</div>
   <h2>Prompt Patterns Across Test Layers</h2>
   <div class="grid-2" style="margin-top:18px">
     <div class="code-card">
@@ -745,7 +769,7 @@ Constraints:
 </section>
 
 <section>
-  <div class="eyebrow">9. Reusable Prompt</div>
+  <div class="eyebrow">10. Reusable Prompt</div>
   <h2>Playwright MCP Prompt Template</h2>
   <div class="code-card" style="margin-top:18px">
     <pre><code class="language-text">I need to create an E2E test using the Playwright MCP.
@@ -792,7 +816,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">10. Real Example</div>
+  <div class="eyebrow">11. Real Example</div>
   <h2>Anchor the Talk in a Real Business Flow</h2>
   <div class="grid-2" style="margin-top:20px">
     <div class="panel">
@@ -826,7 +850,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">11. Selector Policy</div>
+  <div class="eyebrow">12. Selector Policy</div>
   <h2>Good AI Output Still Depends on a Stable Selector Strategy</h2>
   <table>
     <tr>
@@ -866,7 +890,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">12. Auth</div>
+  <div class="eyebrow">13. Auth</div>
   <h2>Operational Pattern: Login Once with <code>storageState</code></h2>
   <div class="grid-2" style="margin-top:18px">
     <div class="code-card">
@@ -903,7 +927,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">13. Mocking</div>
+  <div class="eyebrow">14. Mocking</div>
   <h2>Mocking and Data Setup Need a Clear Default Policy</h2>
   <div class="quote-card" style="margin-top:18px">
     <p>
@@ -956,7 +980,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">14. Ownership</div>
+  <div class="eyebrow">15. Ownership</div>
   <h2>Human Ownership Must Stay Visible in the Workflow</h2>
   <div class="do-dont">
     <div class="compare-card good checklist">
@@ -983,7 +1007,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">15. Anti-Patterns</div>
+  <div class="eyebrow">16. Anti-Patterns</div>
   <h2>Anti-Patterns That Still Kill AI-Generated Test Suites</h2>
   <div class="do-dont">
     <div class="code-card">
@@ -1009,7 +1033,7 @@ test.beforeEach(async ({ page }) => {
 </section>
 
 <section>
-  <div class="eyebrow">16. FAQ</div>
+  <div class="eyebrow">17. FAQ</div>
   <h2>Frequently Asked Questions</h2>
   <div class="grid-2" style="margin-top:20px">
     <div class="panel">
@@ -1062,7 +1086,7 @@ test.beforeEach(async ({ page }) => {
 </section>
 
 <section>
-  <div class="eyebrow">17. Takeaways</div>
+  <div class="eyebrow">18. Takeaways</div>
   <h2>Key Takeaways</h2>
   <div class="takeaway-grid">
     <div class="takeaway-card">
