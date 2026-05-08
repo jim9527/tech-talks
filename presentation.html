@@ -636,22 +636,52 @@
     <div class="code-card">
       <h3>Useful Prompt</h3>
       <pre><code class="language-text">I need to create an E2E test using the Playwright MCP.
+Please help me generate a test script that I can add to our test suite.
 
-Feature: Scholarship creation
-Goal: District manager can create a scholarship
-Entry: authenticated user
-Path: /scholarships/new
-Inputs:
-  - name: Test Scholarship
-  - amount: 5000
-  - due date: 12/31/2026
-Assertions:
-  - submit succeeds
-  - user lands on /scholarships
-  - created record appears in list if UI shows it
-Constraints:
-  - prefer getByRole/getByLabel
-  - reuse storageState when possible</code></pre>
+Test details:
+- Feature to test: Create Scholarship
+- Test description: District admin can create a scholarship with full eligibility settings
+- Base URL: /
+- Test steps:
+  1. Navigate to http://localhost:3000/scholarships
+  2. If not logged in, use auth/user.json as stored credentials (storageState), or run auth/setup.ts globalSetup to log in as district_manager@example.com
+  3. Wait for the "Add a Scholarship" button to be visible, then click it
+  4. Fill in scholarship basic info:
+     - "Name of Scholarship *" → test scholarship
+     - "Sponsor (Awarding Institution)" → alda
+     - "Notes" rich text area (div nth(2)) → test scholarship xxxx
+     - "Award Amount *"  → 1000
+  5. Fill in eligibility fields:
+     - Check the first "Yes" radio
+     - Select grade level: 12th grade
+     - Check "Need-based"
+     - Select institution type: Four-Year College
+     - Select state of use: Delaware
+     - Check the second "Yes" radio
+  6. Click "Advanced Eligibility &" button to expand, then:
+     - Click "High school students are eligible to apply"
+     - Set Enrollment Status to: Program is designated for full-time enrollment status only
+     - Select year of use: Freshman Year
+     - Select state of residence: California
+     - Select disability: Hearing
+     - Select military service: Served in Navy
+  7. Set deadline: click the third "Yes" text, open the date picker, select day 9
+  8. Click "Add Scholarship" to submit
+  9. Verify the alert/toast notification is visible
+  10. Apply grade level filter: click "Grade Level", check "12th", click "Save"
+  11. Verify the created scholarship checkbox "test scholarship alda $1,000" is visible
+
+IMPORTANT:
+- Use the Playwright MCP to generate the test code.
+- Add a comment only for the #mui-52 locator explaining no label/role is available for the amount field.
+- Ensure browser is closed after test completion.
+- Include timeouts where appropriate (use toBeVisible() assertions as implicit waits).
+
+Save to:
+- Path: tests/create-scholarship.spec.ts
+- Describe block: 'Create Scholarship'
+- Test Case Name: 'district admin can create a scholarship with full eligibility'
+</code></pre>
     </div>
   </div>
   <div class="timeline">
