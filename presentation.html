@@ -38,7 +38,7 @@
   .reveal {
     color: var(--ink);
     font-family: "IBM Plex Sans", sans-serif;
-    font-size: 34px;
+    font-size: clamp(20px, 1.8vw, 52px);
   }
 
   .reveal .slides {
@@ -49,7 +49,7 @@
     padding: 36px 42px;
     box-sizing: border-box;
     overflow-y: auto;
-    max-height: 700px;
+    max-height: 100%;
   }
 
   .reveal h1,
@@ -1110,13 +1110,30 @@ test.beforeEach(async ({ page }) => {
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
 <script>
+  function getRevealConfig() {
+    const w = window.innerWidth;
+    if (w < 1280) return { width: 960,  height: 700,  minScale: 0.5, maxScale: 1.5, margin: 0.05 };
+    if (w < 1920) return { width: 1280, height: 720,  minScale: 0.6, maxScale: 1.6, margin: 0.04 };
+    if (w < 2560) return { width: 1920, height: 1080, minScale: 0.8, maxScale: 2.0, margin: 0.03 };
+    return              { width: 2560, height: 1440, minScale: 0.8, maxScale: 2.0, margin: 0.03 };
+  }
+
   Reveal.initialize({
     hash: true,
     slideNumber: true,
     transition: 'fade',
     backgroundTransition: 'none',
-    margin: 0.04,
+    ...getRevealConfig(),
     plugins: [ RevealHighlight ]
+  });
+
+  window.addEventListener('resize', () => {
+    clearTimeout(window.__revealResizeTimer);
+    window.__revealResizeTimer = setTimeout(() => Reveal.layout(), 200);
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    setTimeout(() => Reveal.layout(), 300);
   });
 </script>
 </body>
