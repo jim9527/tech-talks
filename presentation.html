@@ -434,11 +434,7 @@
         <div class="mini-label">Audience</div>
         <p>Technical teams adopting AI-assisted test authoring without lowering engineering standards.</p>
       </div>
-      <div class="hero-panel">
-        <div class="mini-label">Case Study</div>
-        <p>The local <code>scholarship</code> workflow serves as the primary example instead of relying only on a toy demo.</p>
-      </div>
-      <div class="hero-panel">
+<div class="hero-panel">
         <div class="mini-label">Core Thesis</div>
         <p>AI is a force multiplier for test delivery, but E2E is where workflow design and engineering judgment still matter most.</p>
       </div>
@@ -816,41 +812,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">11. Real Example</div>
-  <h2>Anchor the Talk in a Real Business Flow</h2>
-  <div class="grid-2" style="margin-top:20px">
-    <div class="panel">
-      <h3>Repository Example</h3>
-      <ul>
-        <li><code>e2e-demo/tests/scholarship.spec.ts</code> already covers scholarship creation.</li>
-        <li>The flow models a real internal role: <strong>district manager</strong>.</li>
-        <li>The assertions verify navigation after submission and demonstrate form interaction complexity.</li>
-      </ul>
-    </div>
-    <div class="code-card">
-      <h3>Current Spec Shape</h3>
-      <pre><code class="language-typescript">test('user can create a scholarship with storage state', async ({ page }) => {
-  await ensureLoggedIn(page);
-
-  await page.getByRole('textbox', { name: 'Name of Scholarship *' })
-    .fill('Test Scholarship');
-  await page.locator('input[name="award"]').fill('5000');
-  await page.getByRole('group', { name: 'Application Due Date' })
-    .getByLabel('Application Due Date *')
-    .fill('12/31/2026');
-  await page.getByRole('button', { name: 'Add Scholarship' }).click();
-
-  await expect(page).toHaveURL('/scholarships');
-});</code></pre>
-    </div>
-  </div>
-  <div class="callout">
-    Realistic flows are where AI assistance becomes credible: more state, more setup, more business context, and more measurable savings.
-  </div>
-</section>
-
-<section>
-  <div class="eyebrow">12. Selector Policy</div>
+  <div class="eyebrow">11. Selector Policy</div>
   <h2>Good AI Output Still Depends on a Stable Selector Strategy</h2>
   <table>
     <tr>
@@ -890,7 +852,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">13. Auth</div>
+  <div class="eyebrow">12. Auth</div>
   <h2>Operational Pattern: Login Once with <code>storageState</code></h2>
   <div class="grid-2" style="margin-top:18px">
     <div class="code-card">
@@ -927,7 +889,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">14. Mocking</div>
+  <div class="eyebrow">13. Mocking</div>
   <h2>Mocking and Data Setup Need a Clear Default Policy</h2>
   <div class="quote-card" style="margin-top:18px">
     <p>
@@ -980,7 +942,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">15. Ownership</div>
+  <div class="eyebrow">14. Ownership</div>
   <h2>Human Ownership Must Stay Visible in the Workflow</h2>
   <div class="do-dont">
     <div class="compare-card good checklist">
@@ -1007,7 +969,7 @@ Save to:
 </section>
 
 <section>
-  <div class="eyebrow">16. Anti-Patterns</div>
+  <div class="eyebrow">15. Anti-Patterns</div>
   <h2>Anti-Patterns That Still Kill AI-Generated Test Suites</h2>
   <div class="do-dont">
     <div class="code-card">
@@ -1033,7 +995,7 @@ test.beforeEach(async ({ page }) => {
 </section>
 
 <section>
-  <div class="eyebrow">17. FAQ</div>
+  <div class="eyebrow">16. FAQ</div>
   <h2>Frequently Asked Questions</h2>
   <div class="grid-2" style="margin-top:20px">
     <div class="panel">
@@ -1086,7 +1048,7 @@ test.beforeEach(async ({ page }) => {
 </section>
 
 <section>
-  <div class="eyebrow">18. Takeaways</div>
+  <div class="eyebrow">17. Takeaways</div>
   <h2>Key Takeaways</h2>
   <div class="takeaway-grid">
     <div class="takeaway-card">
