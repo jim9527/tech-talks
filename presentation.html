@@ -648,7 +648,7 @@
   <div class="grid-2" style="margin-top:18px">
     <div class="code-card">
       <h3>Weak Prompt</h3>
-      <pre><code class="language-text">Write a Playwright test for scholarships.</code></pre>
+      <pre><code class="language-text">Write a Playwright test for scholarships create flow</code></pre>
       <div class="callout" style="margin-top:16px">
         Result: generic code, guessed selectors, and incomplete assertions.
       </div>
@@ -667,12 +667,11 @@ Test details:
   2. If not logged in, use auth/user.json as stored credentials (storageState), or run auth/setup.ts globalSetup to log in as district_manager@example.com
   3. Wait for the "Add a Scholarship" button to be visible, then click it
   4. Fill in scholarship basic info:
-     - "Name of Scholarship *" → test scholarship
-     - "Sponsor (Awarding Institution)" → alda
-     - "Notes" rich text area (div nth(2)) → test scholarship xxxx
+     - "Name of Scholarship *" ('input[name="title"]') → test scholarship
+     - "Sponsor (Awarding Institution)" ('input[name="provider"]') → alda
+     - "Notes" rich text area (getByRole('group', { name: 'Notes' })) → test scholarship xxxx
      - "Award Amount *" ('input[name="award"]')  → 1000
   5. Fill in eligibility fields:
-     - Check the first "Yes" radio
      - Select grade level: 12th grade
      - Check "Need-based"
      - Select institution type: Four-Year College
